@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Box, Button } from '@airtable/blocks/ui';
+import { Box, Button, Text } from '@airtable/blocks/ui';
 import RoutificClient from '../client/routific';
 import { GlobalContext } from './global-context';
 import { RoutesInterface } from './routes-interface';
@@ -12,6 +12,8 @@ export const Route = () => {
     routesData,
     setRoutesData,
   } = useContext(GlobalContext);
+
+  const [error, setError] = useState(false);
 
   const routificClient = new RoutificClient(
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NmQ0MjE4YzNiNjIwNzAwMWIzODJiYjMiLCJpYXQiOjE3MjUxNzgyNTJ9.LkB0IajsGcO5ZgdYv-1S96LxevAG5p9K71J_37-1dTA'
@@ -53,6 +55,13 @@ export const Route = () => {
   };
 
   const handleTransports = async () => {
+    if (!ordersToRoute || fleetConfiguration) {
+      setError(true);
+      return;
+    }
+
+    setError(false);
+
     try {
       const transportPromises = fleetConfiguration.map(async (vehicle) => {
         const data = {
@@ -81,18 +90,17 @@ export const Route = () => {
 
   return (
     <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      flexDirection="column"
       padding="24px"
       backgroundColor="white"
-      borderRadius="12px"
-      boxShadow="0 4px 8px rgba(0, 0, 0, 0.1)"
+      borderRadius="16px"
+      boxShadow="0 6px 12px rgba(0, 0, 0, 0.1)"
+      maxWidth="800px"
+      margin="auto"
+      marginTop="24px"
+      border="1px solid #e0e0e0"
     >
       {/* Przycisk obliczania tras */}
       <Button
-        margin="16px 0"
         onClick={handleTransports}
         type="button"
         width="100%"
@@ -112,13 +120,19 @@ export const Route = () => {
         Oblicz trasy
       </Button>
 
-      {routesData && (
-        <Box width="100%" marginTop="16px">
-          <RoutesInterface data={routesData} />
-        </Box>
+      {error && (
+        <Text marginTop={1} textColor="tomato">
+          Uzupełnij wszystkie dane
+        </Text>
       )}
 
-      {/*<RoutesInterface />*/}
+      {/*{routesData && (*/}
+      {/*  <Box width="100%" marginTop="16px">*/}
+      {/*    <RoutesInterface data={routesData} />*/}
+      {/*  </Box>*/}
+      {/*)}*/}
+
+      <RoutesInterface />
     </Box>
   );
 };

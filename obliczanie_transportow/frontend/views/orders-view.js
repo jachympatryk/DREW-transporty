@@ -17,7 +17,16 @@ import { Settings } from '../components/settings';
 
 export const OrdersView = () => {
   return (
-    <Box marginTop={4}>
+    <Box
+      padding="24px"
+      backgroundColor="white"
+      borderRadius="16px"
+      boxShadow="0 6px 12px rgba(0, 0, 0, 0.1)"
+      maxWidth="800px"
+      margin="auto"
+      marginTop="24px"
+      border="1px solid #e0e0e0"
+    >
       <Settings />
 
       <Fleet />

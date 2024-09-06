@@ -11,7 +11,8 @@ export const GlobalProvider = ({ children }) => {
 
   //TODO: add start and end time while calculating routes
 
-  console.log(fleetConfiguration);
+  console.log('fleetConfiguration', fleetConfiguration);
+  console.log('ordersToRoute', ordersToRoute);
 
   return (
     <GlobalContext.Provider

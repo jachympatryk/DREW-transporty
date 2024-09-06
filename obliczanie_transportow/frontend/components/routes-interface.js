@@ -6,76 +6,104 @@ import {
   useRecords,
   Text,
   ProgressBar,
+  RecordCard,
 } from '@airtable/blocks/ui';
 import React, { useContext, useState } from 'react';
 import { fetchLatLng } from '../utils/geocoding';
 import { GlobalContext } from './global-context';
 
-// const data = {
-//   total_travel_time: 365,
-//   total_idle_time: 0,
-//   total_visit_lateness: 0,
-//   total_vehicle_overtime: 0,
-//   vehicle_overtime: {
-//     recjKBCRFYgWuo3wa: 0,
-//     recxw8bNMtSifdcxl: 0,
-//   },
-//   total_break_time: 0,
-//   num_unserved: 0,
-//   unserved: null,
-//   solution: {
-//     recjKBCRFYgWuo3wa: [
-//       {
-//         location_id: 'base',
-//         location_name: '33-100 Tarnów',
-//         distance: 0,
-//       },
-//       {
-//         location_id: 'recEl7V4PVzy8gDvp',
-//         location_name: '33-151 Stare Żukowice, Poland',
-//         distance: 18653.8,
-//       },
-//       {
-//         location_id: 'base',
-//         location_name: '33-100 Tarnów',
-//         distance: 18897,
-//       },
-//     ],
-//     recxw8bNMtSifdcxl: [
-//       {
-//         location_id: 'base',
-//         location_name: '33-100 Tarnów',
-//         distance: 0,
-//       },
-//       {
-//         location_id: 'recLy9q3OIBRl8MFw',
-//         location_name: '42-200 Częstochowa, Poland',
-//         distance: 228621.8,
-//       },
-//       {
-//         location_id: 'rece8R0aFAVDaTeTd',
-//         location_name: '30-003 Kraków, Poland',
-//         distance: 145209.7,
-//       },
-//       {
-//         location_id: 'base',
-//         location_name: '33-100 Tarnów',
-//         distance: 84676.9,
-//       },
-//     ],
-//   },
-//   total_working_time: 365,
-//   status: 'success',
-//   num_late_visits: 0,
-//   pl_precision: 6,
-//   distances: {
-//     recjKBCRFYgWuo3wa: 37.5508,
-//     recxw8bNMtSifdcxl: 458.50840000000005,
-//   },
-//   total_distance: 496.05920000000003,
-// };
+const data = [
+  {
+    total_travel_time: 55,
+    total_idle_time: 0,
+    total_visit_lateness: 0,
+    total_vehicle_overtime: 0,
+    vehicle_overtime: {
+      recjKBCRFYgWuo3wa: 0,
+    },
+    total_break_time: 0,
+    num_unserved: 2,
+    unserved: {
+      rece8R0aFAVDaTeTd: 'The load is too large for any vehicle.',
+      recLy9q3OIBRl8MFw: 'cannot be visited within the constraints',
+    },
+    solution: {
+      recjKBCRFYgWuo3wa: [
+        {
+          location_id: 'base',
+          location_name: '33-100 Tarnów',
+          distance: 0,
+        },
+        {
+          location_id: 'recEl7V4PVzy8gDvp',
+          location_name: '33-151 Stare Żukowice, Poland',
+          distance: 18653.8,
+        },
+        {
+          location_id: 'base',
+          location_name: '33-100 Tarnów',
+          distance: 18897,
+        },
+      ],
+    },
+    total_working_time: 55,
+    status: 'success',
+    num_late_visits: 0,
+    pl_precision: 6,
+    distances: {
+      recjKBCRFYgWuo3wa: 37.5508,
+    },
+    total_distance: 37.5508,
+  },
+  {
+    total_travel_time: 310,
+    total_idle_time: 0,
+    total_visit_lateness: 0,
+    total_vehicle_overtime: 0,
+    vehicle_overtime: {
+      recxw8bNMtSifdcxl: 0,
+    },
+    total_break_time: 0,
+    num_unserved: 1,
+    unserved: {
+      recEl7V4PVzy8gDvp: 'cannot be visited within the constraints',
+    },
+    solution: {
+      recxw8bNMtSifdcxl: [
+        {
+          location_id: 'base',
+          location_name: '33-100 Tarnów',
+          distance: 0,
+        },
+        {
+          location_id: 'recLy9q3OIBRl8MFw',
+          location_name: '42-200 Częstochowa, Poland',
+          distance: 228621.8,
+        },
+        {
+          location_id: 'rece8R0aFAVDaTeTd',
+          location_name: '30-003 Kraków, Poland',
+          distance: 145209.7,
+        },
+        {
+          location_id: 'base',
+          location_name: '33-100 Tarnów',
+          distance: 84676.9,
+        },
+      ],
+    },
+    total_working_time: 310,
+    status: 'success',
+    num_late_visits: 0,
+    pl_precision: 6,
+    distances: {
+      recxw8bNMtSifdcxl: 458.5084,
+    },
+    total_distance: 458.5084,
+  },
+];
 
-export const RoutesInterface = ({ data }) => {
+export const RoutesInterface = () => {
   const base = useBase();
   const { routeDay, setRoutesData, setOrdersToRoute, setFleetConfiguration } =
     useContext(GlobalContext);
@@ -272,16 +300,7 @@ export const RoutesInterface = ({ data }) => {
   };
 
   return (
-    <Box
-      backgroundColor="white"
-      border="1px solid #e0e0e0"
-      borderRadius="12px"
-      minHeight="120px"
-      marginTop="16px"
-      padding="24px"
-      width="100%"
-      boxShadow="0 4px 8px rgba(0, 0, 0, 0.1)"
-    >
+    <Box>
       <Heading size="small" marginBottom="16px">
         Trasy
       </Heading>
@@ -304,30 +323,44 @@ export const RoutesInterface = ({ data }) => {
 
       <Box padding="16px" border="1px solid #e0e0e0" borderRadius="8px">
         {currentRoute.map((location, index) => {
+          const record = ordersRecords.find((order) => {
+            if (location.location_id === 'base') return;
+
+            return order.id === location.location_id;
+          });
+
           return (
             <Box
               key={index}
-              padding="12px"
-              border="1px solid #ddd"
-              borderRadius="8px"
-              marginBottom="8px"
-              display="flex"
-              justifyContent="space-between"
               alignItems="center"
-              backgroundColor="#f9f9f9"
+              padding="12px"
+              borderRadius="8px"
+              marginTop="16px"
+              backgroundColor="#f8f9fa"
+              boxShadow="0 2px 4px rgba(0, 0, 0, 0.05)"
+              border="1px solid #ddd"
             >
               <Box display="flex" flexDirection="column">
                 <Text textColor="light" fontSize="small">
                   {location.location_id === 'base'
                     ? 'Baza'
-                    : `Miejsce: ${index + 1}`}
+                    : `Miejsce: ${index}`}
                 </Text>
-                <Text textColor="light" fontSize="small">
-                  {location.location_id === 'base'
-                    ? ''
-                    : `ID: ${location.location_id}`}
-                </Text>
+                {/*<Text textColor="light" fontSize="small">*/}
+                {/*  {location.location_id === 'base'*/}
+                {/*    ? ''*/}
+                {/*    : `ID: ${location.location_id}`}*/}
+                {/*</Text>*/}
               </Box>
+
+              {record && (
+                <RecordCard
+                  margin="16px auto"
+                  style={{ width: '100%' }}
+                  record={record}
+                />
+              )}
+
               <Box display="flex" flexDirection="column">
                 <Text fontWeight="bold">
                   {location.location_name.replace(', Poland', '')}
