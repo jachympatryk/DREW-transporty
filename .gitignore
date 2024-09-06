@@ -1,0 +1,78 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Binaries for programs and plugins
+.DS_Store
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build output
+dist/
+build/
+.out/
+.next/
+
+# Static directories
+public/static
+/static
+
+# Test coverage
+coverage/
+
+# Misc
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Mac system files
+Thumbs.db
+.DS_Store
+
+# Temporary files
+tmp/
+temp/
+
+# JetBrains IDE files
+.idea/
+*.iml
+
+# Parcel cache
+.cache/
+
+# Webpack files
+.webpack/
+
+# Storybook files
+storybook-static/
+
+# Others
+*.local
+*.env
+*.log
+*.lock
+
+# Ignore other config files
+config/
+*.config.js
+*.config.ts
+
+# Ignore Python virtual environment if used
+venv/
+
