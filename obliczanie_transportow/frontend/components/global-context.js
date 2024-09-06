@@ -4,11 +4,14 @@ export const GlobalContext = createContext();
 
 export const GlobalProvider = ({ children }) => {
   const [routeDay, setRouteDay] = useState(null);
+
   const [fleetConfiguration, setFleetConfiguration] = useState([]);
   const [ordersToRoute, setOrdersToRoute] = useState([]);
+  const [routesData, setRoutesData] = useState(null);
 
-  console.log('handleTransports', fleetConfiguration);
-  console.log('ordersToRoute', ordersToRoute);
+  //TODO: add start and end time while calculating routes
+
+  console.log(fleetConfiguration);
 
   return (
     <GlobalContext.Provider
@@ -19,6 +22,8 @@ export const GlobalProvider = ({ children }) => {
         setFleetConfiguration,
         ordersToRoute,
         setOrdersToRoute,
+        routesData,
+        setRoutesData,
       }}
     >
       {children}

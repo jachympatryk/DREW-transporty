@@ -5,14 +5,17 @@ import { GlobalContext } from './global-context';
 import { RoutesInterface } from './routes-interface';
 
 export const Route = () => {
-  const { routeDay, fleetConfiguration, ordersToRoute } =
-    useContext(GlobalContext);
+  const {
+    routeDay,
+    fleetConfiguration,
+    ordersToRoute,
+    routesData,
+    setRoutesData,
+  } = useContext(GlobalContext);
 
   const routificClient = new RoutificClient(
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NmQ0MjE4YzNiNjIwNzAwMWIzODJiYjMiLCJpYXQiOjE3MjUxNzgyNTJ9.LkB0IajsGcO5ZgdYv-1S96LxevAG5p9K71J_37-1dTA'
   );
-
-  const [routesData, setRoutesData] = useState(null);
 
   const mapOrders = (orders) => {
     return orders.reduce((acc, order) => {
@@ -30,7 +33,7 @@ export const Route = () => {
     }, {});
   };
 
-  const mapFleet = (fleet) => {
+  const mapFleet = (vehicle) => {
     const baseLocation = {
       id: 'base',
       name: '33-100 Tarnów',
@@ -38,37 +41,43 @@ export const Route = () => {
       lng: 20.985842,
     };
 
-    return fleet.reduce((fleet, vehicle, index) => {
-      fleet[vehicle.id] = {
+    return {
+      [vehicle.id]: {
         start_location: baseLocation,
         end_location: baseLocation,
         shift_start: vehicle.startTime,
         shift_end: vehicle.endTime,
         capacity: vehicle.loadCapacity,
-      };
-      return fleet;
-    }, {});
+      },
+    };
   };
 
   const handleTransports = async () => {
     try {
-      const data = {
-        visits: mapOrders(ordersToRoute),
-        fleet: mapFleet(fleetConfiguration),
-        options: {
-          shortest_distance: true,
-          polylines: true,
-        },
-      };
+      const transportPromises = fleetConfiguration.map(async (vehicle) => {
+        const data = {
+          visits: mapOrders(ordersToRoute),
+          fleet: mapFleet(vehicle),
+          options: {
+            shortest_distance: true,
+            polylines: true,
+          },
+        };
 
-      const result = await routificClient.calculateTransports(data);
+        const result = await routificClient.calculateTransports(data);
+        console.log('Response for vehicle:', vehicle.id, result);
+        return result;
+      });
 
-      setRoutesData(result);
-      console.log('Response:', result);
+      const results = await Promise.all(transportPromises);
+
+      setRoutesData(results);
     } catch (error) {
       console.error('Error during transport calculation:', error);
     }
   };
+
+  console.log(routesData);
 
   return (
     <Box
